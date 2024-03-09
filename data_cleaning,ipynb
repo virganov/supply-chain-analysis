@@ -1,0 +1,56 @@
+# import library
+import pandas as pd
+  
+# read dataset
+df = pd.read_csv("Supply Chain Dataset - DataCoSupplyChainDataset.csv")
+df.head()
+
+# select columns
+selected_columns = ['Order Id', 'Days for shipping (real)', 'Days for shipment (scheduled)', 'Delivery Status', 'Sales', 'Benefit per order', 'Late_delivery_risk', 'Order Region', 'Order Country', 'Order Status','order date (DateOrders)', 'shipping date (DateOrders)', 'Shipping Mode']
+df_selected = df[selected_columns]
+df_selected
+
+df_selected.info()
+
+# check duplicate
+duplicate = df_selected.duplicated().sum()
+duplicate
+
+# drop duplicate
+df_selected.drop_duplicates(inplace=True)
+
+# check duplicate
+duplicate_2 = df_selected.duplicated().sum()
+duplicate_2
+
+# check null values
+missing_values = df_selected.isnull().sum()
+missing_values
+
+# check unique values of Days for shipping (real)
+df_selected['Days for shipping (real)'].unique()
+
+# check unique values of Days for shipment (scheduled)
+df_selected['Days for shipment (scheduled)'].unique()
+
+# check unique values of Late_delivery_risk
+df_selected['Late_delivery_risk'].unique()
+
+# check unique values of Shipping Mode
+df_selected['Shipping Mode'].unique()
+
+# check unique values of Delivery Status
+df_selected['Delivery Status'].unique()
+
+# exclude canceled shipping in delivery status
+df_selected = df_selected[df_selected['Delivery Status'] != 'Shipping canceled']
+
+# convert shipping date to datetime format
+df_selected['shipping date (DateOrders)'] = pd.to_datetime(df_selected['shipping date (DateOrders)'])
+
+# filter out rows for the year 2018
+df_filtered = df_selected[df_selected['shipping date (DateOrders)'].dt.year != 2018]
+df_filtered
+
+# save to csv
+df_filtered.to_csv("DataCo_Wrangling_2.csv", index=False)
